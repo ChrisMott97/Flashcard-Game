@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <title>a game.</title>
+</head>
+<body>
+    <h1>a game.</h1>
+    <div id="container">
+
+    </div>
+    <div id="next">
+        <h2>Next</h2>
+    </div>
+    {% raw %}
+    <script id="question-template" type="text/x-handlebars-template">
+        <div class="question" id=q{{id}}>
+            <h2>{{question}}</h2>
+        </div>
+      </script>
+      <script id="answer-template" type="text/x-handlebars-template">
+        <div class="answer" id={{id}}>
+            <h3>{{answer}}</h3>
+        </div>
+      </script>
+      {% endraw %}
+    <script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.2/handlebars.js"></script>
+    <script src="/static/js/shuffle-array.js"></script>
+    <script src="/static/js/load.js"></script>
+</body>
+</html>

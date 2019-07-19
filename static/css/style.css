@@ -1,0 +1,125 @@
+body{
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+    height: 100%;
+    background-color: white;
+}
+
+.question{
+    margin-top: 50px;
+    margin-bottom: 40px;
+    margin-right: 25%;
+    margin-left: 25%;
+    padding: 20px;
+    background-color: #4db79c;
+    color: white;
+    /* opacity: 0; */
+    display: none;
+    
+}
+.answer{
+    margin-right: 25%;
+    padding: 20px;
+    margin-left: 25%;
+    background-color: #4db79c;
+    margin-bottom: 20px;
+    cursor: pointer;
+    color: white;
+    border-width: 2px;
+    border-color: rgba(0, 0, 0, 0);
+    border-style: solid;
+    height: 70px;
+    display: none;
+    transition: background-color 1s;
+}
+
+.answer:hover{
+    background-color: #944996;
+    transition: 1s;
+}
+
+.correct{
+    border-width: 4px;
+    border-color: #e72477;
+    border-style: solid;
+    transition: 2s;
+    height: 200px;
+    cursor: auto;
+}
+.correct:hover,.incorrect:hover{
+    background-color: #4db79c;
+}
+.incorrect{
+    border-width: 4px;
+    border-color: #4e5a70;
+    border-style: solid;
+    transition: 2s;
+    height: 200px;
+}
+.other{
+    margin-top: 0px;
+    margin-bottom: 0px;
+    overflow: hidden;
+    padding: 0px;
+    height: 0px;
+    opacity: 0;
+    transition: 1s;
+    cursor: auto;
+}
+
+#next{
+    width: 100%;
+    background-color: #944996;
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    cursor: pointer;
+    display:none;
+    color: white;
+    padding: 20px;
+    transition: background-color 1s;
+}
+
+#next:hover{
+    background-color: #4e5a70;
+    transition: background-color 1s;
+}
+
+.nav{
+    font-size: 30px;
+}
+a{
+    padding: 10px;
+    text-decoration-style: none;
+    text-decoration: none;
+    color: black;
+}
+a:hover{
+    opacity: 0.7;
+}
+
+#container{
+    width: 100%;
+    /* border: 1px solid black; */
+    overflow: hidden;
+}
+
+#left{
+    width: 49.5%;
+    float:left;
+    border: 1px solid red;
+}
+
+#right{
+    width: 50%;
+    border: 1px solid green;
+    float:left;
+}
+
+.clickable{
+    cursor: pointer;
+}
+
+.clickable:hover{
+    opacity: 0.8;
+}

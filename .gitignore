@@ -10,8 +10,9 @@ dist/
 *.eggs
 *.egg-info/
 MANIFEST
-static/vender/
+static/vendor/
 venv/
+static/scss/
 
 # Documentation
 docs/build/
