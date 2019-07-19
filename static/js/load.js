@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     let i = 0
-    $.get("/api/questions", {game:"5d2f454a830943ee227c9975"})
+    $.get("/api/questions", {gameuri: window.location.pathname.split("/")[2]})
     .done((questions)=>{
         console.log(questions)
         shuffle(questions)
@@ -18,7 +18,6 @@ document.addEventListener('DOMContentLoaded', function() {
 }, false);
 
 function open_question(question){
-    
 
     var question_source   = document.getElementById("question-template").innerHTML;
     var question_template = Handlebars.compile(question_source);

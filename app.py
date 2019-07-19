@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, request, send_from_directory
+from flask import Flask, render_template, jsonify, request, send_from_directory, redirect
 from mongoengine import *
 from bson.objectid import ObjectId
 import json
@@ -28,7 +28,23 @@ class Question(Document):
 
 @app.route('/')
 def index():
-    return render_template("index.html")
+    return redirect('/play/introduction-to-the-employee-handbook')
+
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('404.html'), 404
+
+@app.route('/play/<uri>')
+def play(uri):
+    connect('game')
+    game = Game.objects(uri=uri).first()
+    if(not game):
+        return redirect("/404")
+    return render_template("index.html", name=game.name)
+
+@app.route('/404')
+def error():
+    return render_template("404.html")
 
 @app.route('/favicon.ico')
 def favicon():
@@ -93,10 +109,20 @@ def questions():
     connect('game')
 
     if(request.method == "GET"):
-    #Get all questions for a given game by ID
-        if(request.args["game"]):
-            game = request.args['game']
-            questions = Question.objects(game=game)
+    #Get all questions for a given game by uri
+        if('gameuri' in request.args):
+            game = Game.objects(uri=request.args['gameuri'])
+            if(not game):
+                return None
+            game = game.first()
+            questions = Question.objects(game=game.id)
+            return app.response_class(
+                response=questions.to_json(),
+                status=200,
+                mimetype='application/json'
+            )
+        elif('gameid' in request.args):
+            questions = Question.objects(game=request.args['gameid'])
             return app.response_class(
                 response=questions.to_json(),
                 status=200,

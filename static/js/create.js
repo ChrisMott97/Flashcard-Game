@@ -24,6 +24,18 @@ $('#autogen').on('input',function(e){
     }
 })
 
+$(document).on('click', '.correctanswer', function(e){
+    let parent = $(this)
+    $(document).find('.correctanswer').each(function(i, el){
+        console.log(!$(el).is(parent))
+        
+        if(!$(el).is(parent)){
+            $(el).removeClass('active')
+            $(el).prop('checked', false)
+        }
+    })
+})
+
 document.addEventListener('DOMContentLoaded', function() {
     var q_source   = document.getElementById("q-template").innerHTML;
     var q_template = Handlebars.compile(q_source);
