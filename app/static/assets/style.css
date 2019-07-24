@@ -13,7 +13,7 @@ body{
     padding: 20px;
     background-color: #4db79c;
     color: white;
-    /* opacity: 0; */
+    opacity: 0;
     /* display: none; */
     
 }
@@ -29,7 +29,7 @@ body{
     border-color: rgba(0, 0, 0, 0);
     border-style: solid;
     height: 70px;
-    /* display: none; */
+    opacity: 0;
     transition: background-color 1s;
 }
 
@@ -74,7 +74,7 @@ body{
     left: 0;
     position: fixed;
     cursor: pointer;
-    /* display:none; */
+    opacity: 0;
     color: white;
     padding: 20px;
     transition: background-color 1s;
@@ -102,6 +102,8 @@ a:hover{
     width: 100%;
     /* border: 1px solid black; */
     overflow: hidden;
+    margin-top: 100px;
+    /* transform: translateY(30%); */
 }
 
 #left{
@@ -124,10 +126,6 @@ a:hover{
     opacity: 0.8;
 }
 
-.gameName{
-    /* transform: rotate(-90deg);
-    float: left;
-    top: 400px;
-    left: -100px;
-    position: fixed; */
+#gameName{
+    opacity: 0;
 }

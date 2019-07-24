@@ -48,3 +48,5 @@ pip-wheel-metadata
 
 # Mac
 .DS_Store
+node_modules
+misc

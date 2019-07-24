@@ -1,0 +1,36 @@
+{
+  "name": "flashcard-game",
+  "version": "1.0.0",
+  "description": "Flashcard-Game",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "webpack --watch",
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ChrisMott97/Flashcard-Game.git"
+  },
+  "author": "chris <chris.mott@immersivelabs.co.uk>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ChrisMott97/Flashcard-Game/issues"
+  },
+  "homepage": "https://github.com/ChrisMott97/Flashcard-Game#readme",
+  "devDependencies": {
+    "css-loader": "^3.1.0",
+    "style-loader": "^0.23.1",
+    "webpack": "^4.37.0",
+    "webpack-cli": "^3.3.6"
+  },
+  "dependencies": {
+    "animejs": "^3.0.1",
+    "axios": "^0.19.0",
+    "chart.js": "^2.8.0",
+    "font-awesome": "^4.7.0",
+    "fs": "0.0.1-security",
+    "handlebars": "^4.1.2",
+    "shuffle-array": "^1.0.1"
+  }
+}

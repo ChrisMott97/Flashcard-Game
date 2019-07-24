@@ -5,7 +5,9 @@ from bson.json_util import dumps
 import json
 import os
 
-app = Flask(__name__,static_url_path='/static')
+app = Flask(__name__,
+    static_url_path='/static/'
+)
 app.secret_key = b'\xae\xdf@G\xa4\xde\xfcti;e3>\xcb\x13m'
 
 class Answer(Document):
