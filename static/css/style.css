@@ -6,7 +6,7 @@ body{
 }
 
 .question{
-    margin-top: 50px;
+    margin-top: 10px;
     margin-bottom: 40px;
     margin-right: 25%;
     margin-left: 25%;
@@ -14,7 +14,7 @@ body{
     background-color: #4db79c;
     color: white;
     /* opacity: 0; */
-    display: none;
+    /* display: none; */
     
 }
 .answer{
@@ -29,7 +29,7 @@ body{
     border-color: rgba(0, 0, 0, 0);
     border-style: solid;
     height: 70px;
-    display: none;
+    /* display: none; */
     transition: background-color 1s;
 }
 
@@ -42,7 +42,7 @@ body{
     border-width: 4px;
     border-color: #e72477;
     border-style: solid;
-    transition: 2s;
+    transition: 1s;
     height: 200px;
     cursor: auto;
 }
@@ -53,7 +53,7 @@ body{
     border-width: 4px;
     border-color: #4e5a70;
     border-style: solid;
-    transition: 2s;
+    transition: 1s;
     height: 200px;
 }
 .other{
@@ -63,7 +63,7 @@ body{
     padding: 0px;
     height: 0px;
     opacity: 0;
-    transition: 1s;
+    transition: height 2s, padding 1s .5s, margin 1s .5s, opacity .5s;
     cursor: auto;
 }
 
@@ -74,7 +74,7 @@ body{
     left: 0;
     position: fixed;
     cursor: pointer;
-    display:none;
+    /* display:none; */
     color: white;
     padding: 20px;
     transition: background-color 1s;
@@ -122,4 +122,12 @@ a:hover{
 
 .clickable:hover{
     opacity: 0.8;
+}
+
+.gameName{
+    /* transform: rotate(-90deg);
+    float: left;
+    top: 400px;
+    left: -100px;
+    position: fixed; */
 }
