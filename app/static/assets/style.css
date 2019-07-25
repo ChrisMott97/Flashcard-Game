@@ -3,6 +3,7 @@ body{
     text-align: center;
     height: 100%;
     background-color: white;
+    overflow: hidden;
 }
 
 .question{
@@ -23,7 +24,7 @@ body{
     margin-left: 25%;
     background-color: #4db79c;
     margin-bottom: 20px;
-    cursor: pointer;
+    /* cursor: pointer; */
     color: white;
     border-width: 2px;
     border-color: rgba(0, 0, 0, 0);
@@ -33,10 +34,10 @@ body{
     transition: background-color 1s;
 }
 
-.answer:hover{
+/* .answer:hover{
     background-color: #944996;
     transition: 1s;
-}
+} */
 
 .correct{
     border-width: 4px;
@@ -46,9 +47,9 @@ body{
     height: 200px;
     cursor: auto;
 }
-.correct:hover,.incorrect:hover{
+/* .correct:hover,.incorrect:hover{
     background-color: #4db79c;
-}
+} */
 .incorrect{
     border-width: 4px;
     border-color: #4e5a70;
@@ -64,7 +65,7 @@ body{
     height: 0px;
     opacity: 0;
     transition: height 2s, padding 1s .5s, margin 1s .5s, opacity .5s;
-    cursor: auto;
+    /* cursor: auto; */
 }
 
 #next{
@@ -73,17 +74,18 @@ body{
     bottom: 0;
     left: 0;
     position: fixed;
-    cursor: pointer;
+    /* cursor: pointer; */
     opacity: 0;
     color: white;
     padding: 20px;
     transition: background-color 1s;
+    display: none;
 }
 
-#next:hover{
+/* #next:hover{
     background-color: #4e5a70;
     transition: background-color 1s;
-}
+} */
 
 .nav{
     font-size: 30px;
@@ -119,7 +121,7 @@ a:hover{
 }
 
 .clickable{
-    cursor: pointer;
+    /* cursor: pointer; */
 }
 
 .clickable:hover{
@@ -127,5 +129,9 @@ a:hover{
 }
 
 #gameName{
+    opacity: 0;
+}
+.completed{
+    display: none;
     opacity: 0;
 }

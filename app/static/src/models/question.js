@@ -13,6 +13,18 @@ function getByUri(gameUri, callback){
     });
 }
 
+function getScore(callback){
+    axios.get('/api/score')
+    .then(function(res){
+        callback(res.data);
+    })
+    .catch(function(e){
+        console.log(e);
+        callback();
+    });
+}
+
 export default {
-    getByUri: getByUri
+    getByUri: getByUri,
+    getScore: getScore
 };
