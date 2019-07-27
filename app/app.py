@@ -75,11 +75,11 @@ def data():
 
 @app.route('/admin')
 def admin():
-    return render_template("dashboard.html")
+    return redirect('/admin/info')
 
 @app.route('/admin/info')
 def info():
-    return render_template("info.html")
+    return render_template("admin.html")
 
 @app.route('/admin/create')
 def create():
@@ -182,6 +182,13 @@ def corrects():
                 if(correct):
                     session['score'] += 1
                     return "true"
+            else:
+                correct = Correct.objects(question=request.args['questionid']).first()
+                return app.response_class(
+                    response=correct.to_json(),
+                    status=200,
+                    mimetype='application/json'
+                )
         return "false"
 
 @app.route('/api/score')

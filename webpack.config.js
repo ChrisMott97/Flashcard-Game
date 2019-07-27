@@ -1,9 +1,13 @@
 const path = require('path');
 
 module.exports = {
-    entry: './app/static/src/index.js',
+    entry: {
+        app: './app/static/src/index.js',
+        admin: './app/static/src/admin.js',
+        create: './app/static/src/create.js'
+    },
     output: {
-        filename: 'main.js',
+        filename: '[name].js',
         path: path.resolve(__dirname, 'app/static/dist')
     },
     mode: 'development',

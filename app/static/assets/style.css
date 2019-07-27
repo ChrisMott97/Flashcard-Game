@@ -132,6 +132,6 @@ a:hover{
     opacity: 0;
 }
 .completed{
-    display: none;
     opacity: 0;
+    font-size: 300px;
 }

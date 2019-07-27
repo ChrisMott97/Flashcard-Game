@@ -94,6 +94,18 @@ var anims = {
                 }
             ]
         });
+    },
+    scoreUp: function(score){
+        anime({
+            targets: '.completed',
+            innerHTML: {
+                value: [0,score],
+                round: 1
+            },
+            easing: 'easeInQuad',
+            opacity: 1,
+            duration: 2000
+        });
     }
 };
 
@@ -102,7 +114,7 @@ var anims = {
 //On startup
 function init(){
     anims.fadeIn(ui.title);
-    QuestionModel.getByUri(settings.gameUri, function(data){
+    QuestionModel.findByUri(settings.gameUri, function(data){
         settings.questions = shuffle(data);
         if(settings.questions){
             updateUi(settings.questions.pop());
@@ -146,9 +158,9 @@ function updateUi(question){
 function next(i){
     ui.next.style.cursor = 'pointer';
     ui.next.addEventListener('click', function _onclick(){
+        ui.next.removeEventListener('click', _onclick);
         anims.fadeOut(ui.answers[i]);
         anims.fadeOut(ui.question,1000, ()=>{
-            ui.next.removeEventListener('click', _onclick);
             anims.fadeOut(ui.next);
             ui.question.parentNode.removeChild(ui.question);
             ui.answers.forEach(function(answer){
@@ -165,13 +177,13 @@ function next(i){
 }
 
 function finished(){
-    QuestionModel.getScore((score)=>{
+    QuestionModel.findScore((score)=>{
         if(score){
             add(templates.complete({score: score}), ui.container);
         }else{
             add(templates.complete({score: 0}), ui.container);
         }
-        anims.fadeIn(document.querySelector('.completed'));
+        anims.scoreUp(score);
     });
     // $.get("/api/score").done(function(score){
     //     $("#container").append(complete_template({score:score}));

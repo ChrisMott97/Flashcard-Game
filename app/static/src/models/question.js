@@ -1,30 +1,38 @@
 import axios from 'axios';
 
-function getByUri(gameUri, callback){
-    axios.get('/api/questions', {
-        params:{
+const findByUri = (gameUri, callback) => axios.get('/api/questions', {
+        params: {
             gameuri: gameUri
         }
-    }).then(function(res){
+    }).then((res) => {
         callback(res.data);
-    }).catch(function(e){
+    }).catch((e) => {
         console.log(e);
         callback();
     });
-}
 
-function getScore(callback){
-    axios.get('/api/score')
-    .then(function(res){
+const findByGameId = (gameId, callback) => axios.get('/api/questions', {
+        params: {
+            gameid: gameId
+        }
+    }).then((res) => {
+        callback(res.data);
+    }).catch((e) => {
+        console.log(e);
+        callback();
+    });
+
+const findScore = (callback) => axios.get('/api/score')
+    .then((res) => {
         callback(res.data);
     })
-    .catch(function(e){
+    .catch((e) => {
         console.log(e);
         callback();
     });
-}
 
 export default {
-    getByUri: getByUri,
-    getScore: getScore
+    findByUri: findByUri,
+    findScore: findScore,
+    findByGameId: findByGameId
 };
