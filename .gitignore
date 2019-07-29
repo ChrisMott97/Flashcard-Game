@@ -12,6 +12,7 @@ dist/
 MANIFEST
 static/js/vendor/
 venv/
+env/
 static/scss/
 
 # Documentation
