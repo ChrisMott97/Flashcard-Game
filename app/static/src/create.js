@@ -61,6 +61,13 @@ let events = {
             e.preventDefault();
             $(this).parent().after(templates.q());
         });
+    },
+    commit: () => {
+        $(document).on('click', '#commit', function (e) {
+            e.preventDefault();
+            commit();
+            // Loading page
+        })
     }
 };
 
@@ -70,6 +77,7 @@ let templates = {
 };
 
 function init() {
+    events.commit();
     events.initName();
     events.initCheck();
     events.selectAnswer();
@@ -79,6 +87,37 @@ function init() {
     $('#questions').append(templates.q({
         answer: templates.a()
     }));
+}
+
+function commit() {
+    const data = {
+        gameName: $('#gameName').val(),
+        gameDesc: $('#gameDesc').val(),
+        gameUri: $('#uri').val(),
+        questions: [
+
+        ]
+    }
+    $('.question').each(function(i, el){
+        var question = {};
+        question.name = $(this).find("#questionName").val();
+        question.answers = []
+        $(this).find("#answers").find(".answer").each(function(i2, el2){
+            console.log(this)
+            var answer = {}
+            answer.answerName = $(this).find('#answerName').val();
+            answer.answerExplain = $(this).find('#answerExplain').val();
+            if($(this).find('.correctanswer').hasClass('active')){
+                answer.correct = true
+            }else{
+                answer.correct = false
+            }
+            question.answers.push(answer);
+        })
+        data.questions.push(question);
+    })
+    console.log(data);
+
 }
 
 init();

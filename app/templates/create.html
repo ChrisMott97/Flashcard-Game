@@ -98,7 +98,7 @@
                     </div>
                     <div class="card shadow mb-2">
                         <div class="card-body" id="games">
-                            <a href="#" class="btn btn-success btn-icon-split">
+                            <a href="#" id="commit" class="btn btn-success btn-icon-split">
                                 <span class="icon text-white-50">
                                     <i class="fas fa-check"></i>
                                 </span>
@@ -110,7 +110,7 @@
             </div>
             {% raw %}
             <script id="q-template" type="text/x-handlebars-template">
-                <li id="question" class="list-group-item">
+                <li id="question" class="list-group-item question">
                     <div class="form-group">
                         <label for="questionName"><h4>Question</h4></label>
                         <input type="text" class="form-control" id="questionName" placeholder="">
@@ -129,7 +129,7 @@
                 </li>
             </script>
             <script id="a-template" type="text/x-handlebars-template">
-                <div id="answer">
+                <div class="answer">
                     <div class="form-group">
                         <label for="answerName">Answer</label>
                         <div class="input-group">
