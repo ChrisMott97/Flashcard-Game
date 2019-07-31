@@ -38,13 +38,21 @@
     </nav>
     <br>
     <!-- Page Content -->
-    <div class="container">
+    <div class="container-fluid" style="width: 80%">
             <div class="row">
                 <div class="col-sm">
                     <div class="card shadow mb-2">
                         <div class="card-header py-3">
+                            <h3 class="m-0 text-primary">Games</h3>
+                        </div>
+                        <div class="card-body" id="games">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <div class="card shadow mb-2">
+                        <div class="card-header py-3">
                             <h3 class="m-0 text-primary">Main</h3>
-                            <!-- <small>3 days ago</small> -->
                         </div>
                         <div class="card-body">
                             <form>
@@ -71,6 +79,27 @@
                             </form>
                         </div>
                     </div>
+                        <div class="card shadow mb-2">
+                            <div class="card-header py-3">
+                                <h3 class="m-0 text-primary">Questions</h3>
+                                <!-- <small>3 days ago</small> -->
+                            </div>
+                            <div class="card-body">
+                                    <ul class="list-group list-group-flush" id="questions">
+                                    
+                                        </ul>
+                            </div>
+                        </div>
+                        <div class="card shadow mb-2">
+                            <div class="card-body" id="games">
+                                <a href="#" id="commit" class="btn btn-success btn-icon-split">
+                                    <span class="icon text-white-50">
+                                        <i class="fas fa-check"></i>
+                                    </span>
+                                    <span class="text">Commit</span>
+                                </a>
+                            </div>
+                        </div>
                 </div>
                 <div class="col-sm">
                     <div class="card shadow mb-2">
@@ -81,32 +110,16 @@
                         <div class="card-body">
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm">
                     <div class="card shadow mb-2">
-                        <div class="card-header py-3">
-                            <h3 class="m-0 text-primary">Questions</h3>
+                        <div class="card-header py-3" id="logs">
+                            <h3 class="m-0 text-danger">Logs</h3>
                             <!-- <small>3 days ago</small> -->
                         </div>
                         <div class="card-body">
-                                <ul class="list-group list-group-flush" id="questions">
-                                
-                                    </ul>
-                        </div>
-                    </div>
-                    <div class="card shadow mb-2">
-                        <div class="card-body" id="games">
-                            <a href="#" id="commit" class="btn btn-success btn-icon-split">
-                                <span class="icon text-white-50">
-                                    <i class="fas fa-check"></i>
-                                </span>
-                                <span class="text">Commit</span>
-                            </a>
                         </div>
                     </div>
                 </div>
+                
             </div>
             {% raw %}
             <script id="q-template" type="text/x-handlebars-template">
@@ -156,6 +169,17 @@
                     
                 </div>
             </script>
+            <script id="games-template" type="text/x-handlebars-template">
+                <div class="card mb-2 clickable" id={{id}}>
+                <div class="card-header py-3">
+                    <h5 class="m-0 text-primary">{{name}}</h5>
+                      <!-- <small>3 days ago</small> -->
+                </div>
+                <div class="card-body">
+                        {{description}}
+                </div>
+            </div>
+        </script>
             
             <!-- <script src="/static/js/jquery.min.js"></script>
             <script src="/static/js/create.js"></script> -->

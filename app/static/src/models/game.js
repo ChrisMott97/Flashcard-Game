@@ -1,7 +1,9 @@
 import axios from 'axios';
 
-function findAll(callback){
-    axios.get('/api/games')
+const prefix = '/api/games'
+
+const findAll = (callback) => {
+    axios.get(prefix)
     .then((res)=>{
         callback(res.data);
     }).catch((e)=>{
@@ -10,8 +12,15 @@ function findAll(callback){
     });
 }
 
+const save = (game, callback) => axios.post(prefix, {game})
+.then((res) => {
+    callback(res.data)
+})
+
+
 export default {
-    findAll: findAll
+    findAll: findAll,
+    save: save
 };
 
 // function getByUri(gameUri, callback){

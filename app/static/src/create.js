@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import popper from 'popper.js';
 import bootstrap from 'bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/scss/bootstrap.scss';
 import handlebars from 'handlebars/dist/cjs/handlebars';
 import GameModel from './models/game';
 import QuestionModel from './models/question';
@@ -39,13 +39,13 @@ let events = {
     },
     selectAnswer: () => {
         $(document).on('click', '.correctanswer', function (e) {
-            let parent = $(this);
+            let parentThis = $(this);
             $(document).find('.correctanswer').each(function (i, el) {
-                console.log(!$(el).is(parent));
-
-                if (!$(el).is(parent)) {
-                    $(el).removeClass('active');
-                    $(el).prop('checked', false);
+                if($(el).parent().parent().parent().parent().parent().parent().is(parentThis.parent().parent().parent().parent().parent().parent())){
+                    if (!$(el).is(parentThis)) {
+                        $(el).removeClass('active');
+                        $(el).prop('checked', false);
+                    }
                 }
             });
         });
@@ -73,7 +73,8 @@ let events = {
 
 let templates = {
     q: handlebars.compile($('#q-template').html()),
-    a: handlebars.compile($('#a-template').html())
+    a: handlebars.compile($('#a-template').html()),
+    games: handlebars.compile($('#games-template').html())
 };
 
 function init() {
@@ -87,7 +88,28 @@ function init() {
     $('#questions').append(templates.q({
         answer: templates.a()
     }));
+
+    GameModel.findAll((games)=>renderGames(games))
+
 }
+
+const renderGames = (games) => {
+    if (games) {
+        games.forEach(game => {
+            $('#games').append(templates.games({
+                id: 'g' + game._id.$oid,
+                name: game.name,
+                description: game.description
+            }));
+            let uiGame = $(`#g${game._id.$oid}`);
+            games.push(uiGame);
+            uiGame.css('cursor', 'pointer');
+            uiGame.on('click', () => {
+                
+            });
+        });
+    }
+};
 
 function commit() {
     const data = {
@@ -103,11 +125,10 @@ function commit() {
         question.name = $(this).find("#questionName").val();
         question.answers = []
         $(this).find("#answers").find(".answer").each(function(i2, el2){
-            console.log(this)
             var answer = {}
-            answer.answerName = $(this).find('#answerName').val();
-            answer.answerExplain = $(this).find('#answerExplain').val();
-            if($(this).find('.correctanswer').hasClass('active')){
+            answer.name = $(this).find('#answerName').val();
+            answer.explain = $(this).find('#answerExplain').val();
+            if($(this).find('input:checked').val()){
                 answer.correct = true
             }else{
                 answer.correct = false
@@ -116,7 +137,11 @@ function commit() {
         })
         data.questions.push(question);
     })
-    console.log(data);
+    GameModel.save(data, (res)=>{
+        if(!Array.isArray(res) || !res.length){
+            window.location.replace("/admin/create")
+        }
+    })
 
 }
 

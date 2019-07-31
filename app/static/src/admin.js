@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import popper from 'popper.js';
 import bootstrap from 'bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/scss/bootstrap.scss';
 import handlebars from 'handlebars/dist/cjs/handlebars';
 import GameModel from './models/game';
 import QuestionModel from './models/question';

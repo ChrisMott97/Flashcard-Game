@@ -1,12 +1,9 @@
-import '../assets/style.css';
+import '../assets/style.scss';
 import anime from 'animejs';
 import shuffle from 'shuffle-array';
 import handlebars from 'handlebars/dist/cjs/handlebars';
 import QuestionModel from './models/question';
 import AnswerModel from './models/answer';
-// require(
-//     ['models/question', 'models/answer','vendor/shuffle-array', 'vendor/handlebars-latest', 'vendor/anime.min'], 
-//     function(QuestionModel, AnswerModel,shuffle, Handlebars, anime){
 
 var settings = {
     current : 0,
@@ -22,7 +19,8 @@ var ui = {
     questionSrc: document.querySelector("#question-template"),
     answerSrc: document.querySelector("#answer-template"),
     question: null,
-    answers: []
+    answers: [],
+    start: document.querySelector("#start")
 };
 
 var templates = {
@@ -32,28 +30,6 @@ var templates = {
 };
 
 var anims = {
-    fadeIn: function(els, dur = 1000, callback=()=>{}){
-        anime({
-            targets: els, 
-            opacity: 1,
-            duration: dur,
-            easing: 'easeInOutQuad',
-            translateX: [-400,0],
-            delay: anime.stagger(100),
-            begin: ()=>{
-                if(Array.isArray(els)){
-                    els.forEach(el => {
-                        el.style.display = "block";
-                    });
-                }else{
-                    els.style.display = "block";
-                }
-            },complete: ()=>{
-                callback();
-            }
-
-        });
-    },
     fadeOut: function(els, dur = 1000, callback=()=>{}){
         anime({
             targets: els, 
@@ -73,6 +49,47 @@ var anims = {
                 }
                 callback();
             }
+        });
+    },
+    fadeOutNoMove: function(els, dur = 1000, callback=()=>{}){
+        anime({
+            targets: els, 
+            opacity: 0,
+            duration: dur, 
+            easing: 'easeInOutQuad',
+            display: 'none',
+            delay: anime.stagger(100),
+            complete: ()=>{
+                if(Array.isArray(els)){
+                    els.forEach(el => {
+                        el.style.display = "none";
+                    });
+                }else{
+                    els.style.display = "none";
+                }
+                callback();
+            }
+        });
+    },
+    fadeIn: function(els, dur = 1000, callback=()=>{},o=1){
+        anime({
+            targets: els, 
+            opacity: o,
+            duration: dur,
+            easing: 'easeInOutQuad',
+            delay: anime.stagger(100),
+            begin: ()=>{
+                if(Array.isArray(els)){
+                    els.forEach(el => {
+                        el.style.display = "block";
+                    });
+                }else{
+                    els.style.display = "block";
+                }
+            },complete: ()=>{
+                callback();
+            }
+
         });
     },
     expand: function(el){
@@ -106,20 +123,39 @@ var anims = {
             opacity: 1,
             duration: 2000
         });
+    },
+    emphasize: function(el){
+        anime({
+            targets: el,
+            duration: 50,
+            opacity: 1,
+            easing: 'linear'
+        });
+    },
+    deemphasize: function(el){
+        anime({
+            targets: el,
+            duration: 50, 
+            opacity: 0.7,
+            easing: 'linear'
+        });
     }
 };
-
-
 
 //On startup
 function init(){
     anims.fadeIn(ui.title);
-    QuestionModel.findByUri(settings.gameUri, function(data){
-        settings.questions = shuffle(data);
-        if(settings.questions){
-            updateUi(settings.questions.pop());
-        }
-    });
+    document.addEventListener('click', function _click(){
+        document.removeEventListener('click', _click)
+        anims.fadeOutNoMove([ui.title, ui.start], 1000, ()=>{
+            QuestionModel.findByUri(settings.gameUri, function(data){
+                settings.questions = shuffle(data);
+                if(settings.questions){
+                    updateUi(settings.questions.pop());
+                }
+            });
+        })
+    })
 }
 
 function updateUi(question){
@@ -133,10 +169,18 @@ function updateUi(question){
         if(answers){
             answers.forEach(function(answer){
 
-                var id = 'a'+answer._id.$oid;
-                add(templates.answer({id:id, answer:answer.answer}), ui.container);
+                var id = `a${answer._id.$oid}`;
+                add(templates.answer({id:id, answer:answer.answer, explain:answer.explain}), ui.container);
 
                 var i = ui.answers.push(document.querySelector('#'+id))-1;
+
+                ui.answers[i].addEventListener('mouseover', ()=>{
+                    anims.emphasize(ui.answers[i]);
+                });
+
+                ui.answers[i].addEventListener('mouseout', ()=>{
+                    anims.deemphasize(ui.answers[i]);
+                });
 
                 ui.answers[i].addEventListener('click', function _onclick(){
                     ui.answers[i].removeEventListener('click', _onclick);
@@ -150,7 +194,7 @@ function updateUi(question){
                 });
                 ui.answers[i].style.cursor = "pointer";
             });
-            anims.fadeIn([ui.question].concat(ui.answers));
+            anims.fadeIn(ui.answers)
         }
     });
 }

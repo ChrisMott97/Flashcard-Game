@@ -13,6 +13,7 @@ app.secret_key = b'\xae\xdf@G\xa4\xde\xfcti;e3>\xcb\x13m'
 class Answer(Document):
     meta = {'collection': 'answers'}
     answer = StringField()
+    explain = StringField()
 
 class Game(Document):
     meta = {'collection': 'games'}
@@ -32,6 +33,7 @@ class Correct(Document):
     meta = {'collection': 'corrects'}
     question = ReferenceField(Question)
     answer = ReferenceField(Answer)
+
 
 def check_session():
     if('score' in session):
@@ -91,6 +93,34 @@ def testtest():
 
 #REST API
 
+
+def validate_game(game):
+    errors = []
+    if(not game['gameName']):
+        errors.append("Game name can't be empty!")
+    if(not game['gameDesc']):
+        errors.append("Game description can't be empty!")
+    if(not game['gameUri']):
+        errors.append("Game URI can't be empty!")
+    questionsCorrectMissing = False
+    questionsNameEmpty = False
+    for question in game['questions']:
+        if(not question['name']):
+            questionsNameEmpty = True
+        anyCorrect = False
+        for answer in question['answers']:
+            if(not answer['name']):
+                errors.append("No answers should be empty!")
+            if(not answer['explain']):
+                errors.append("All answers should have explanations!")
+            if(answer['correct']):
+                anyCorrect = True
+        if(not anyCorrect):
+            errors.append("All questions must have a correct answer!")
+            
+
+    return errors
+
 #Games
 @app.route('/api/games', methods=["GET","POST","PUT","DELETE"])
 def games():
@@ -99,7 +129,6 @@ def games():
     #Get all games
     if(request.method == "GET"):
         if(not request.args):
-            print(type(Game.objects))
             return app.response_class(
                 response=Game.objects.to_json(),
                 status=200,
@@ -117,7 +146,35 @@ def games():
 
     #Create a game
     if(request.method == "POST"):
-        return request.form
+        if('game' in request.json):
+            json = request.json['game']
+            errors = validate_game(json)
+            if(not errors):
+                game = Game()
+                game.uri = json['gameUri']
+                game.name = json['gameName']
+                game.description = json['gameDesc']
+                game.save()
+
+                for question in json['questions']:
+                    q = Question()
+                    c = Correct()
+                    q.game = game
+                    q.question = question['name']
+                    q.answers = []
+                    for answer in question['answers']:
+                        a = Answer()
+                        a.answer = answer['name']
+                        a.explain = answer['explain']
+                        a.save()
+                        q.answers.append(a)
+                        if(answer['correct']):
+                            c.question = q
+                            c.answer = a
+                    q.save()
+                    c.save()
+
+            return jsonify(errors)
 
     #Update a game
     #TODO
@@ -259,3 +316,5 @@ def testcreate():
     c.save()
 
     return "true"
+
+
