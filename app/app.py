@@ -10,6 +10,9 @@ app = Flask(__name__,
 )
 app.secret_key = b'\xae\xdf@G\xa4\xde\xfcti;e3>\xcb\x13m'
 
+#########################################################################
+# MODELS                                                                #
+#########################################################################
 class Answer(Document):
     meta = {'collection': 'answers'}
     answer = StringField()
@@ -41,16 +44,16 @@ def check_session():
     score = session['score'] = 0
     return False
 
+#########################################################################
+# Routes                                                                #
+#########################################################################
 
+# Root
 @app.route('/')
 def index():
     return redirect('/play/introduction-to-the-employee-handbook')
 
-
-@app.errorhandler(404)
-def page_not_found(error):
-    return render_template('404.html'), 404
-
+# Play
 @app.route('/play/<uri>')
 def play(uri):
     connect('game')
@@ -61,39 +64,47 @@ def play(uri):
         return redirect("/404")
     return render_template("index.html", name=game.name)
 
+# Error route doesn't exist
 @app.route('/404')
 def error():
-    return render_template("404.html")
+    return render_template("404.html"), 404
 
+# Load favicon
+@app.errorhandler(404)
 @app.route('/favicon.ico')
 def favicon():
-    return send_from_directory(os.path.join(app.root_path, 'static'),
+    return send_from_directory(os.path.join(app.root_path, 'static/assets'),
                           'favicon.ico',mimetype='image/vnd.microsoft.icon')
 
-@app.route('/json', methods={"POST"})
-def data():
-    connect('game')
-    return Question.objects.to_json()
+# Test React
+@app.route('/react')
+def react():
+    return render_template('test.html')
 
+
+# @app.route('/json', methods={"POST"})
+# def data():
+#     connect('game')
+#     return Question.objects.to_json()
+
+# Admin 
 @app.route('/admin')
 def admin():
     return redirect('/admin/info')
 
+# Admin info
 @app.route('/admin/info')
 def info():
     return render_template("admin.html")
 
+# Admin create
 @app.route('/admin/create')
 def create():
     return render_template("create.html")
 
-@app.route('/test/test')
-def testtest():
-    return render_template("blank.html")
-
-#REST API
-
-
+#########################################################################
+# REST API                                                              #
+#########################################################################
 def validate_game(game):
     errors = []
     if(not game['gameName']):
@@ -259,62 +270,67 @@ def logout():
     session.pop('score', None)
     return ""
 
+###################################################################
+# Utility                                                         #
+###################################################################
 
-@app.route('/test/create', methods=["POST"])
-def testcreate():
-    db = connect('game')
 
-    db.drop_database('game')
 
-    connect('game')
+# @app.route('/test/create', methods=["POST"])
+# def testcreate():
+#     db = connect('game')
 
-    game = Game()
-    game.uri="introduction-to-the-employee-handbook"
-    game.name="Introduction to the Employee Handbook"
-    game.description="Welcome to the Immersive Labs Employee Handbook."
-    game.save()
+#     db.drop_database('game')
+
+#     connect('game')
+
+#     game = Game()
+#     game.uri="introduction-to-the-employee-handbook"
+#     game.name="Introduction to the Employee Handbook"
+#     game.description="Welcome to the Immersive Labs Employee Handbook."
+#     game.save()
     
-    q = Question()
-    a1 = Answer(answer="Age, race, nationality and/or disability").save()
-    a2 = Answer(answer="Gender, sexual orientation and/or gender reassignment").save()
-    a3 = Answer(answer="All of the above ONLY").save()
-    a4 = Answer(answer="Any person’s individual, personal or social characteristics").save()
-    q.question="Immersive Labs is an equal opportunity employer – this means we do not discriminate against potential employees based on..."
-    q.answers=[a1,a2,a3,a4]
-    q.game=game
-    q.save()
+#     q = Question()
+#     a1 = Answer(answer="Age, race, nationality and/or disability").save()
+#     a2 = Answer(answer="Gender, sexual orientation and/or gender reassignment").save()
+#     a3 = Answer(answer="All of the above ONLY").save()
+#     a4 = Answer(answer="Any person’s individual, personal or social characteristics").save()
+#     q.question="Immersive Labs is an equal opportunity employer – this means we do not discriminate against potential employees based on..."
+#     q.answers=[a1,a2,a3,a4]
+#     q.game=game
+#     q.save()
 
-    c = Correct(question=q, answer=a4)
-    c.save()
+#     c = Correct(question=q, answer=a4)
+#     c.save()
 
-    q = Question()
-    a1 = Answer(answer="True").save()
-    a2 = Answer(answer="False").save()
-    q.question="The employee handbook may be amended at any point, at the discretion of the company."
-    q.answers=[a1,a2]
-    q.game=game
-    q.save()
+#     q = Question()
+#     a1 = Answer(answer="True").save()
+#     a2 = Answer(answer="False").save()
+#     q.question="The employee handbook may be amended at any point, at the discretion of the company."
+#     q.answers=[a1,a2]
+#     q.game=game
+#     q.save()
 
-    c = Correct(question=q, answer=a1)
-    c.save()
+#     c = Correct(question=q, answer=a1)
+#     c.save()
 
-    game = Game()
-    game.uri="immersive-labs-house-rules"
-    game.name="Immersive Labs’ House Rules"
-    game.description="Think of this lab as the ultimate ‘How to...’ guide, outlining the dos and don’ts of Immersive Labs and Runway East (RWE) – what better way to ensure Immersive Labs remains an exceptional place to work?"
-    game.save()
+#     game = Game()
+#     game.uri="immersive-labs-house-rules"
+#     game.name="Immersive Labs’ House Rules"
+#     game.description="Think of this lab as the ultimate ‘How to...’ guide, outlining the dos and don’ts of Immersive Labs and Runway East (RWE) – what better way to ensure Immersive Labs remains an exceptional place to work?"
+#     game.save()
 
-    q = Question()
-    a1 = Answer(answer="No").save()
-    a2 = Answer(answer="Yes").save()
-    q.question="Are you allowed to vape in the office?"
-    q.answers=[a1,a2]
-    q.game=game
-    q.save()
+#     q = Question()
+#     a1 = Answer(answer="No").save()
+#     a2 = Answer(answer="Yes").save()
+#     q.question="Are you allowed to vape in the office?"
+#     q.answers=[a1,a2]
+#     q.game=game
+#     q.save()
 
-    c = Correct(question=q, answer=a1)
-    c.save()
+#     c = Correct(question=q, answer=a1)
+#     c.save()
 
-    return "true"
+#     return "true"
 
 

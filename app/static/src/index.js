@@ -20,7 +20,7 @@ var ui = {
     answerSrc: document.querySelector("#answer-template"),
     question: null,
     answers: [],
-    start: document.querySelector("#start")
+    // start: document.querySelector("#start")
 };
 
 var templates = {
@@ -30,54 +30,28 @@ var templates = {
 };
 
 var anims = {
-    fadeOut: function(els, dur = 1000, callback=()=>{}){
+    action: (els, callback=()=>{})=>{
         anime({
-            targets: els, 
-            opacity: 0,
-            duration: dur, 
+            targets: els,
+            duration: 500,
+            backgroundColor: '#00b4e5',
             easing: 'easeInOutQuad',
-            translateX: [400],
-            display: 'none',
-            delay: anime.stagger(100),
+            color: [
+                {value: '#00b4e5'},
+                {value: '#ffffff'}
+            ],
             complete: ()=>{
-                if(Array.isArray(els)){
-                    els.forEach(el => {
-                        el.style.display = "none";
-                    });
-                }else{
-                    els.style.display = "none";
-                }
                 callback();
             }
-        });
+        })
     },
-    fadeOutNoMove: function(els, dur = 1000, callback=()=>{}){
+    fadeIn: function(els, callback=()=>{}){
         anime({
             targets: els, 
-            opacity: 0,
-            duration: dur, 
+            opacity: 1,
+            duration: 500,
             easing: 'easeInOutQuad',
-            display: 'none',
-            delay: anime.stagger(100),
-            complete: ()=>{
-                if(Array.isArray(els)){
-                    els.forEach(el => {
-                        el.style.display = "none";
-                    });
-                }else{
-                    els.style.display = "none";
-                }
-                callback();
-            }
-        });
-    },
-    fadeIn: function(els, dur = 1000, callback=()=>{},o=1){
-        anime({
-            targets: els, 
-            opacity: o,
-            duration: dur,
-            easing: 'easeInOutQuad',
-            delay: anime.stagger(100),
+            // delay: anime.stagger(50),
             begin: ()=>{
                 if(Array.isArray(els)){
                     els.forEach(el => {
@@ -92,22 +66,40 @@ var anims = {
 
         });
     },
+    fadeOut: function(els, callback=()=>{}){
+        anime({
+            targets: els, 
+            opacity: 0,
+            duration: 500, 
+            easing: 'linear',
+            // translateX: [0,200],
+            display: 'none',
+            // delay: anime.stagger(100),
+            complete: ()=>{
+                setTimeout(()=>{
+                    if(Array.isArray(els)){
+                        els.forEach(el => {
+                            el.style.display = "none";
+                        });
+                    }else{
+                        els.style.display = "none";
+                    }
+                    callback();
+                }, 200)
+            }
+        });
+    },
     expand: function(el){
         anime({
             targets: el,
             easing: 'easeInOutQuad',
-            height: {
-                value: 300,
-                delay: 1000
-            },
             cursor: "none",
-            // translateY: ui.answers.indexOf(el)*-140
             opacity: [
                 {
                     value: 0
                 },{
                     value: 1,
-                    delay: 800
+                    delay: 500
                 }
             ]
         });
@@ -139,6 +131,11 @@ var anims = {
             opacity: 0.7,
             easing: 'linear'
         });
+    },
+    correct: function(el){
+        anime({
+            targets: el,
+        })
     }
 };
 
@@ -147,7 +144,7 @@ function init(){
     anims.fadeIn(ui.title);
     document.addEventListener('click', function _click(){
         document.removeEventListener('click', _click)
-        anims.fadeOutNoMove([ui.title, ui.start], 1000, ()=>{
+        anims.fadeOut(ui.title, ()=>{
             QuestionModel.findByUri(settings.gameUri, function(data){
                 settings.questions = shuffle(data);
                 if(settings.questions){
@@ -170,27 +167,22 @@ function updateUi(question){
             answers.forEach(function(answer){
 
                 var id = `a${answer._id.$oid}`;
-                add(templates.answer({id:id, answer:answer.answer, explain:answer.explain}), ui.container);
+                add(templates.answer({id:id, answer:answer.answer}), ui.container);
 
                 var i = ui.answers.push(document.querySelector('#'+id))-1;
 
-                ui.answers[i].addEventListener('mouseover', ()=>{
-                    anims.emphasize(ui.answers[i]);
-                });
-
-                ui.answers[i].addEventListener('mouseout', ()=>{
-                    anims.deemphasize(ui.answers[i]);
-                });
 
                 ui.answers[i].addEventListener('click', function _onclick(){
                     ui.answers[i].removeEventListener('click', _onclick);
                     ui.answers[i].style.cursor = 'default';
 
-                    anims.fadeIn(ui.next);
-                    anims.expand(ui.answers[i]);
-                    checkCorrect(question, answer, ui.answers[i]);
-                    anims.fadeOut(others(ui.answers[i], _onclick));
-                    next(i);
+                    anims.action(ui.answers[i], ()=>{
+                        anims.expand(ui.answers[i]);
+                        anims.fadeIn(ui.next);
+                        anims.fadeOut(others(ui.answers[i], _onclick));
+                        checkCorrect(question, answer, ui.answers[i]);
+                        next(i);
+                    });
                 });
                 ui.answers[i].style.cursor = "pointer";
             });
@@ -204,7 +196,7 @@ function next(i){
     ui.next.addEventListener('click', function _onclick(){
         ui.next.removeEventListener('click', _onclick);
         anims.fadeOut(ui.answers[i]);
-        anims.fadeOut(ui.question,1000, ()=>{
+        anims.fadeOut(ui.question, ()=>{
             anims.fadeOut(ui.next);
             ui.question.parentNode.removeChild(ui.question);
             ui.answers.forEach(function(answer){
@@ -248,6 +240,7 @@ function others(uianswer, func){
 function checkCorrect(question, answer, uianswer){
     AnswerModel.checkCorrect(question._id.$oid, answer._id.$oid, function(correct){
         if(correct){
+            anims.correct(uianswer);
             // uianswer.classList.add("correct");
         }else{
             // uianswer.classList.add("incorrect");

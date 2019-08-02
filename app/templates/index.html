@@ -11,34 +11,32 @@
 </head>
 
 <body>
+  <!-- <img src="/static/assets/immersive_outline_plain.svg" width="1000px"/> -->
   <div id="gameName">
-    <h1>{{name}}</h1>
-  </div>
-  <div id="start">
-    <h1>START</h1>
+    <p>{{name}}</p>
   </div>
   <div id="container">
 
   </div>
   <div id="next">
-    <h2>Next</h2>
+    <p>Next</p>
   </div>
   {% raw %}
   <script id="question-template" type="text/x-handlebars-template">
     <div class="question" id=q{{id}}>
-        <h2>{{question}}</h2>
+        <p>{{question}}</p>
     </div>
   </script>
   <script id="answer-template" type="text/x-handlebars-template">
     <div class="answer button" id={{id}}>
-        <h3>{{answer}}</h3>
-        <p>{{explain}}</p>
+        <p>{{answer}}</p>
     </div>
   </script>
   <script id="complete-template" type="text/x-handlebars-template">
     <div class="completed">
         {{score}}
     </div>
+    <img src="/static/assets/immersive_outline_text.svg" width="1000px"/>
   </script>
   {% endraw %}
 
