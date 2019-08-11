@@ -14,11 +14,16 @@ const settings = {
 // UI Element references
 const ui = {
     title: document.querySelector('#gameName'),
+    description: document.querySelector('#gameDescription'),
+    continue: document.querySelector('#tapToContinue'),
     container: document.querySelector("#container"),
     next: document.querySelector("#next"),
     completeSrc: document.querySelector("#complete-template"),
     questionSrc: document.querySelector("#question-template"),
     answerSrc: document.querySelector("#answer-template"),
+    explainationSrc: document.querySelector("#explaination-template"),
+    explaination: null,
+    dialog: null,
     question: null,
     answers: [],
     // start: document.querySelector("#start")
@@ -28,7 +33,8 @@ const ui = {
 const templates = {
     complete: handlebars.compile(ui.completeSrc.innerHTML),
     question: handlebars.compile(ui.questionSrc.innerHTML),
-    answer: handlebars.compile(ui.answerSrc.innerHTML)
+    answer: handlebars.compile(ui.answerSrc.innerHTML),
+    explaination: handlebars.compile(ui.explainationSrc.innerHTML)
 };
 
 const anims = {
@@ -143,10 +149,10 @@ const anims = {
 
 //On startup
 const init = () => {
-    anims.fadeIn(ui.title);
+    anims.fadeIn([ui.title, ui.description, ui.continue]);
     document.addEventListener('click', function _click(){
         document.removeEventListener('click', _click)
-        anims.fadeOut(ui.title, ()=>{
+        anims.fadeOut([ui.title, ui.description, ui.continue], ()=>{
             QuestionModel.findByUri(settings.gameUri, function(data){
                 settings.questions = shuffle(data);
                 if(settings.questions){
@@ -161,7 +167,7 @@ function updateUi(question){
     var id = question._id.$oid;
 
     add(templates.question({id: id, question:question.question}), ui.container);
-    ui.question = document.querySelector('#q'+question._id.$oid);
+    ui.question = document.querySelector(`#q${question._id.$oid}`);
     anims.fadeIn(ui.question);
 
     AnswerModel.getByQuestion(id, function(answers){
@@ -171,7 +177,7 @@ function updateUi(question){
                 var id = `a${answer._id.$oid}`;
                 add(templates.answer({id:id, answer:answer.answer}), ui.container);
 
-                var i = ui.answers.push(document.querySelector('#'+id))-1;
+                var i = ui.answers.push(document.querySelector(`#${id}`))-1;
 
 
                 ui.answers[i].addEventListener('click', function _onclick(){
@@ -179,9 +185,13 @@ function updateUi(question){
                     ui.answers[i].style.cursor = 'default';
 
                     anims.action(ui.answers[i], ()=>{
-                        anims.expand(ui.answers[i]);
+                        // anims.expand(ui.answers[i]);'#'+id
                         anims.fadeIn(ui.next);
-                        anims.fadeOut(others(ui.answers[i], _onclick));
+                        anims.fadeOut(others(ui.answers[i], _onclick), ()=>{
+                            add(templates.explaination({explaination: answer.explain}), ui.container);
+                            ui.explaination = document.querySelector("#explaination");
+                            anims.fadeIn(ui.explaination);
+                        });
                         checkCorrect(question, answer, ui.answers[i]);
                         next(i);
                     });
@@ -197,7 +207,10 @@ function next(i){
     ui.next.style.cursor = 'pointer';
     ui.next.addEventListener('click', function _onclick(){
         ui.next.removeEventListener('click', _onclick);
-        anims.fadeOut(ui.answers[i]);
+        // anims.fadeOut(ui.answers[i]);
+        anims.fadeOut(ui.explaination, ()=>{
+            ui.explaination.parentNode.removeChild(ui.explaination);
+        })
         anims.fadeOut(ui.question, ()=>{
             anims.fadeOut(ui.next);
             ui.question.parentNode.removeChild(ui.question);
@@ -216,16 +229,17 @@ function next(i){
 
 function finished(){
     QuestionModel.findScore((data)=>{
-        if(data.score){
-            add(templates.complete({score: data.score}), ui.container);
-        }else{
-            add(templates.complete({score: 0}), ui.container);
-        }
+        let explaination = `Unfortunately you didn't quite get the required score of ${data.required} to pass.`
         if(data.giveToken){
-            console.log("You got the token!")
-        }else{
-            console.log("You DID NOT get the token!")
+            explaination = "Congratulations, you passed!"
         }
+        if(data.score){
+            add(templates.complete({score: data.score, explaination: explaination}), ui.container);
+        }else{
+            add(templates.complete({score: 0, explaination: explaination}), ui.container);
+        }
+        ui.dialog = document.querySelector('#dialog');
+        anims.fadeIn(ui.dialog);
         anims.scoreUp(data.score);
     });
     // $.get("/api/score").done(function(score){
@@ -236,10 +250,10 @@ function finished(){
 function others(uianswer, func){
     var others = [];
     ui.answers.forEach(function(other){
-        if(uianswer != other){
-            other.removeEventListener('click', func);
+        // if(uianswer != other){
+            // other.removeEventListener('click', func);
             others.push(other);
-        }
+        // }
     });
     return others;
 }
@@ -247,7 +261,7 @@ function others(uianswer, func){
 function checkCorrect(question, answer, uianswer){
     AnswerModel.checkCorrect(question._id.$oid, answer._id.$oid, function(correct){
         if(correct){
-            anims.correct(uianswer);
+            // anims.correct(uianswer);
             // uianswer.classList.add("correct");
         }else{
             // uianswer.classList.add("incorrect");

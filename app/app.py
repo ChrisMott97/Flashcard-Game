@@ -58,7 +58,7 @@ def play(uri):
         return redirect("/404")
     session['maxscore'] = game.totalQuestions
     session['reqdscore'] = game.totalQuestionsRequired
-    return render_template("index.html", name=game.name)
+    return render_template("index.html", name=game.name, description=game.description)
 
 # Error route doesn't exist
 @app.route('/404')
@@ -274,7 +274,7 @@ def score():
     giveToken = False
     if(session['score'] >= session['reqdscore']):
         giveToken = True
-    return {'score':str(session['score']), 'giveToken':giveToken}
+    return {'score':str(session['score']), 'giveToken':giveToken, 'required': session['reqdscore']}
 
 
 @app.route('/api/logout')

@@ -15,6 +15,12 @@
   <div id="gameName">
     <p>{{name}}</p>
   </div>
+  <div id="gameDescription">
+    <p>{{description}}</p>
+  </div>
+  <div id="tapToContinue">
+    <p> Tap to Continue! </p>
+  </div>
   <div id="container">
 
   </div>
@@ -36,7 +42,16 @@
       <div class="completed">
           {{score}}
       </div>
+      <div id="dialog">
+        {{explaination}}
+      </div>
   </script>
+  <script id="explaination-template" type="text/x-handlebars-template">
+    <div id="explaination">
+      {{explaination}}
+    </div>
+  </script>
+
   {% endraw %}
 
   <script src="/static/dist/app.js"></script>
