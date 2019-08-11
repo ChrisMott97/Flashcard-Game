@@ -171,12 +171,27 @@ a:hover{
 
 .completed{
     opacity: 0;
-    margin-right: 30%;
-    margin-left: 30%;
-    font-size: 600px;
-    margin-top: 20px;
-    width: 800px;
+    // margin-right: 30%;
+    // margin-left: 30%;
+    font-size: 500px;
+    // margin-top: 20px;
+    // width: 800px;
     color: $static;
     // background-color: $action;
     cursor: default;
+    // display: inline;
+    background-color: $action;
+    width: 600px;
+    margin: 0 auto;
+    // float:left;
 } 
+
+
+#svgstyle{
+    font-size:400px !important;
+    font-family:Roboto
+}
+
+#logo{
+    width: 400px;
+}

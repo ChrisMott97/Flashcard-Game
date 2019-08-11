@@ -116,6 +116,8 @@ function commit() {
         gameName: $('#gameName').val(),
         gameDesc: $('#gameDesc').val(),
         gameUri: $('#uri').val(),
+        totalQuestions: 0,
+        totalQuestionsRequired: $('#reqdQues').val(),
         questions: [
 
         ]
@@ -136,6 +138,8 @@ function commit() {
             question.answers.push(answer);
         })
         data.questions.push(question);
+        data.totalQuestions++
+
     })
     GameModel.save(data, (res)=>{
         if(!Array.isArray(res) || !res.length){

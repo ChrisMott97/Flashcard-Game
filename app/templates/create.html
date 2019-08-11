@@ -105,9 +105,13 @@
                     <div class="card shadow mb-2">
                         <div class="card-header py-3">
                             <h3 class="m-0 text-primary">Settings</h3>
-                            <!-- <small>3 days ago</small> -->
                         </div>
                         <div class="card-body">
+                            <div class="form-group">
+                                <label for="reqdques">Required questions</label>
+                                <input type="text" name="reqdques" class="form-control" id="reqdQues" placeholder="">
+                                <small id="reqdQuesHelp" class="form-text text-muted">Number of questions required to get token.</small>
+                            </div>
                         </div>
                     </div>
                     <div class="card shadow mb-2">
@@ -126,7 +130,7 @@
                 <li id="question" class="list-group-item question">
                     <div class="form-group">
                         <label for="questionName"><h4>Question</h4></label>
-                        <input type="text" class="form-control" id="questionName" placeholder="">
+                        <input type="text" class="form-control" id="questionName" placeholder=""/>
                     </div>
                     <p>Answers</p>
                     <div id='answers'>

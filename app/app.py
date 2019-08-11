@@ -20,14 +20,14 @@ class Answer(Document):
 
 class Game(Document):
     meta = {'collection': 'games'}
-    # _id = ObjectIdField( required=True, default=lambda: ObjectId() )
     uri = StringField()
     name = StringField()
     description = StringField()
+    totalQuestions = IntField()
+    totalQuestionsRequired = IntField()
 
 class Question(Document):
     meta = {'collection': 'questions'}
-    # _id = ObjectIdField( required=True, default=lambda: ObjectId() )
     question = StringField()
     answers = ListField(ReferenceField(Answer))
     game = ReferenceField(Game)
@@ -37,12 +37,6 @@ class Correct(Document):
     question = ReferenceField(Question)
     answer = ReferenceField(Answer)
 
-
-def check_session():
-    if('score' in session):
-        return True
-    score = session['score'] = 0
-    return False
 
 #########################################################################
 # Routes                                                                #
@@ -62,6 +56,8 @@ def play(uri):
     game = Game.objects(uri=uri).first()
     if(not game):
         return redirect("/404")
+    session['maxscore'] = game.totalQuestions
+    session['reqdscore'] = game.totalQuestionsRequired
     return render_template("index.html", name=game.name)
 
 # Error route doesn't exist
@@ -81,12 +77,6 @@ def favicon():
 def react():
     return render_template('test.html')
 
-
-# @app.route('/json', methods={"POST"})
-# def data():
-#     connect('game')
-#     return Question.objects.to_json()
-
 # Admin 
 @app.route('/admin')
 def admin():
@@ -105,34 +95,8 @@ def create():
 #########################################################################
 # REST API                                                              #
 #########################################################################
-def validate_game(game):
-    errors = []
-    if(not game['gameName']):
-        errors.append("Game name can't be empty!")
-    if(not game['gameDesc']):
-        errors.append("Game description can't be empty!")
-    if(not game['gameUri']):
-        errors.append("Game URI can't be empty!")
-    questionsCorrectMissing = False
-    questionsNameEmpty = False
-    for question in game['questions']:
-        if(not question['name']):
-            questionsNameEmpty = True
-        anyCorrect = False
-        for answer in question['answers']:
-            if(not answer['name']):
-                errors.append("No answers should be empty!")
-            if(not answer['explain']):
-                errors.append("All answers should have explanations!")
-            if(answer['correct']):
-                anyCorrect = True
-        if(not anyCorrect):
-            errors.append("All questions must have a correct answer!")
-            
 
-    return errors
-
-#Games
+# Games
 @app.route('/api/games', methods=["GET","POST","PUT","DELETE"])
 def games():
     connect('game')
@@ -153,8 +117,6 @@ def games():
                 mimetype='application/json'
             )
 
-
-
     #Create a game
     if(request.method == "POST"):
         if('game' in request.json):
@@ -165,6 +127,8 @@ def games():
                 game.uri = json['gameUri']
                 game.name = json['gameName']
                 game.description = json['gameDesc']
+                game.totalQuestions = json['totalQuestions']
+                game.totalQuestionsRequired = json['totalQuestionsRequired']
                 game.save()
 
                 for question in json['questions']:
@@ -219,6 +183,7 @@ def questions():
                 mimetype='application/json'
             )
 
+# Answers
 @app.route('/api/answers', methods=["GET", "POST", "PUT", "DELETE"])
 def answers():
     connect('game')
@@ -238,6 +203,7 @@ def answers():
                 mimetype='application/json'
             )
 
+# Corrects
 @app.route('/api/corrects', methods=["GET","POST","PUT","DELETE"])
 def corrects():
     connect('game')
@@ -259,21 +225,65 @@ def corrects():
                 )
         return "false"
 
-@app.route('/api/score')
-def score():
-    check_session()
-    return str(session['score'])
 
-@app.route('/api/logout')
-def logout():
-    check_session()
-    session.pop('score', None)
-    return ""
 
 ###################################################################
 # Utility                                                         #
 ###################################################################
 
+def validate_game(game):
+    errors = []
+    if(not game['gameName']):
+        errors.append("Game name can't be empty!")
+    if(not game['gameDesc']):
+        errors.append("Game description can't be empty!")
+    if(not game['gameUri']):
+        errors.append("Game URI can't be empty!")
+    if(not game['totalQuestions']):
+        errors.append("Unable to count total questions!")
+    if(not game['totalQuestionsRequired']):
+        errors.append("Must specific required amount of questions!")
+    questionsCorrectMissing = False
+    questionsNameEmpty = False
+    for question in game['questions']:
+        if(not question['name']):
+            questionsNameEmpty = True
+        anyCorrect = False
+        for answer in question['answers']:
+            if(not answer['name']):
+                errors.append("No answers should be empty!")
+            if(not answer['explain']):
+                errors.append("All answers should have explanations!")
+            if(answer['correct']):
+                anyCorrect = True
+        if(not anyCorrect):
+            errors.append("All questions must have a correct answer!")
+            
+    print(errors)
+    return errors
+
+def check_session():
+    if('score' in session):
+        return True
+    score = session['score'] = 0
+    return False
+
+@app.route('/api/score')
+def score():
+    check_session()
+    giveToken = False
+    if(session['score'] >= session['reqdscore']):
+        giveToken = True
+    return {'score':str(session['score']), 'giveToken':giveToken}
+
+
+@app.route('/api/logout')
+def logout():
+    check_session()
+    session.pop('score', None)
+    session.pop('reqdscore', None)
+    session.pop('maxscore', None)
+    return ""
 
 
 # @app.route('/test/create', methods=["POST"])

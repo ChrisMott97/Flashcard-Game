@@ -92,7 +92,7 @@
      id="path4818"
      d="m 2302.2347,81.797518 -17.7079,35.629062 c -22.7833,-17.921127 -45.6942,-13.58658 -49.4081,-0.3689 -6.5209,23.20763 50.608,16.76284 68.3376,50.05389 4.4387,8.33466 6.8145,11.71978 6.8856,26.69347 -1.9252,38.75901 -29.6044,52.5086 -46.5711,56.36704 -36.1705,8.22561 -62.7276,-4.80523 -83.3576,-17.32441 l 19.628,-35.84241 c 36.3152,30.52579 60.3205,13.92876 62.0833,2.60783 5.2797,-33.90655 -77.4704,-13.09142 -74.6709,-74.71934 1.2692,-32.895321 16.2863,-44.231418 30.426,-51.576135 22.2123,-11.537937 53.0887,-6.364284 84.3551,8.479903 z"
      style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1" />
-  <text x="20" y="35" class="small">My</text>
+  <text x="170" y="250" style="font: 400px Roboto">2</text>
   <flowRoot
      transform="matrix(7.3810449,0,0,7.3810449,-631.02789,-468.2145)"
      style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"

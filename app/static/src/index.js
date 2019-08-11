@@ -5,13 +5,14 @@ import handlebars from 'handlebars/dist/cjs/handlebars';
 import QuestionModel from './models/question';
 import AnswerModel from './models/answer';
 
-var settings = {
+const settings = {
     current : 0,
     gameUri : window.location.pathname.split("/")[2],
     questions : []
 };
 
-var ui = {
+// UI Element references
+const ui = {
     title: document.querySelector('#gameName'),
     container: document.querySelector("#container"),
     next: document.querySelector("#next"),
@@ -23,13 +24,14 @@ var ui = {
     // start: document.querySelector("#start")
 };
 
-var templates = {
+// Handlebar Templates
+const templates = {
     complete: handlebars.compile(ui.completeSrc.innerHTML),
     question: handlebars.compile(ui.questionSrc.innerHTML),
     answer: handlebars.compile(ui.answerSrc.innerHTML)
 };
 
-var anims = {
+const anims = {
     action: (els, callback=()=>{})=>{
         anime({
             targets: els,
@@ -140,7 +142,7 @@ var anims = {
 };
 
 //On startup
-function init(){
+const init = () => {
     anims.fadeIn(ui.title);
     document.addEventListener('click', function _click(){
         document.removeEventListener('click', _click)
@@ -213,13 +215,18 @@ function next(i){
 }
 
 function finished(){
-    QuestionModel.findScore((score)=>{
-        if(score){
-            add(templates.complete({score: score}), ui.container);
+    QuestionModel.findScore((data)=>{
+        if(data.score){
+            add(templates.complete({score: data.score}), ui.container);
         }else{
             add(templates.complete({score: 0}), ui.container);
         }
-        anims.scoreUp(score);
+        if(data.giveToken){
+            console.log("You got the token!")
+        }else{
+            console.log("You DID NOT get the token!")
+        }
+        anims.scoreUp(data.score);
     });
     // $.get("/api/score").done(function(score){
     //     $("#container").append(complete_template({score:score}));
