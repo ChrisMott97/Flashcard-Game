@@ -114,7 +114,7 @@ const anims = {
     },
     scoreUp: function(score){
         anime({
-            targets: '.completed',
+            targets: ['.completed'],
             innerHTML: {
                 value: [0,score],
                 round: 1
@@ -240,6 +240,7 @@ function finished(){
         }
         ui.dialog = document.querySelector('#dialog');
         anims.fadeIn(ui.dialog);
+        anims.fadeIn(document.querySelector(".completed-outer"))
         anims.scoreUp(data.score);
     });
     // $.get("/api/score").done(function(score){
