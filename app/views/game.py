@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, jsonify, request, send_file, session
+from flask import Blueprint, render_template, jsonify, request, send_file, session, redirect
 from mongoengine import connect
 
 from ..models import Game
@@ -9,7 +9,6 @@ blueprint = Blueprint('game', __name__)
 @blueprint.route('/')
 def index():
     return redirect('/play/darknets')
-
 # Play
 @blueprint.route('/play/<uri>')
 def play(uri):
