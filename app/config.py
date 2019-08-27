@@ -14,7 +14,7 @@ class Production(Config):
 
 class Development(Config):
     DEBUG = True
-    MONGODB_HOST = "mongodb://localhost/game"
+    MONGODB_HOST = "mongodb://mongo/game"
 
 
 class Testing(Config):
