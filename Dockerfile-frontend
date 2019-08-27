@@ -1,0 +1,11 @@
+FROM node:10
+
+LABEL maintainer="chris.mott@immersivelabs.co.uk"
+
+WORKDIR /
+
+COPY ./package.json ./
+COPY ./package-lock.json ./
+RUN npm install
+
+COPY ./webpack.config.js ./
