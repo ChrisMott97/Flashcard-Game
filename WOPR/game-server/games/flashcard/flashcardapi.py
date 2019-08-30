@@ -1,13 +1,16 @@
 from flask import Blueprint, render_template, jsonify, request, send_file, session, Response, stream_with_context
 from json import dumps
 
-from ..models import *
+from games.flashcard.models import *
 
-blueprint = Blueprint('api', __name__)
+flashcardapi = Blueprint(
+    'flashcardapi',
+    __name__
+)
 
 
 # Games
-@blueprint.route('/games', methods=["GET","POST","PUT","DELETE"])
+@flashcardapi.route('/flashcardapi/games', methods=["GET","POST","PUT","DELETE"])
 def games():
 
     #Get all games
@@ -67,7 +70,7 @@ def games():
     #TODO
 
 #Questions
-@blueprint.route('/questions', methods=["GET","POST","PUT","DELETE"])
+@flashcardapi.route('/flashcardapi/questions', methods=["GET","POST","PUT","DELETE"])
 def questions():
     if(request.method == "GET"):
     #Get all questions for a given game by uri
@@ -91,7 +94,7 @@ def questions():
             )
 
 # Answers
-@blueprint.route('/answers', methods=["GET", "POST", "PUT", "DELETE"])
+@flashcardapi.route('/flashcardapi/answers', methods=["GET", "POST", "PUT", "DELETE"])
 def answers():
 
 
@@ -111,7 +114,7 @@ def answers():
             )
 
 # Corrects
-@blueprint.route('/corrects', methods=["GET","POST","PUT","DELETE"])
+@flashcardapi.route('/flashcardapi/corrects', methods=["GET","POST","PUT","DELETE"])
 def corrects():
 
     check_session()
@@ -175,7 +178,7 @@ def check_session():
     score = session['score'] = 0
     return False
 
-@blueprint.route('/score')
+@flashcardapi.route('/flashcardapi/score')
 def score():
     check_session()
     giveToken = False
@@ -184,7 +187,7 @@ def score():
     return {'score':str(session['score']), 'giveToken':giveToken, 'required': session['reqdscore']}
 
 
-@blueprint.route('/logout')
+@flashcardapi.route('/flashcardapi/logout')
 def logout():
     check_session()
     session.pop('score', None)

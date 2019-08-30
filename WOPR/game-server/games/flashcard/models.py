@@ -1,12 +1,12 @@
 from mongoengine import *
 
 class Answer(Document):
-    meta = {'collection': 'answers'}
+    meta = {'collection': 'flashcard_answers'}
     answer = StringField()
     explain = StringField()
 
 class Game(Document):
-    meta = {'collection': 'games'}
+    meta = {'collection': 'flashcard_games'}
     uri = StringField()
     name = StringField()
     description = StringField()
@@ -14,12 +14,12 @@ class Game(Document):
     totalQuestionsRequired = IntField()
 
 class Question(Document):
-    meta = {'collection': 'questions'}
+    meta = {'collection': 'flashcard_questions'}
     question = StringField()
     answers = ListField(ReferenceField(Answer))
     game = ReferenceField(Game)
 
 class Correct(Document):
-    meta = {'collection': 'corrects'}
+    meta = {'collection': 'flashcard_corrects'}
     question = ReferenceField(Question)
     answer = ReferenceField(Answer)
